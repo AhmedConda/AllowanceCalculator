@@ -37,28 +37,21 @@ public class Home extends AppCompatActivity {
         SharedPreferences moneyData = getSharedPreferences("moneydata", MODE_PRIVATE);
         totalMoney = moneyData.getLong("totalmoney", 0);
         numberOfDays = moneyData.getLong("numberofdays", -1);
-        oneDayMoney = moneyData.getLong("oneday", 0);
+        oneDayMoney = moneyData.getLong("oneday", -5);
+        Toast.makeText(Home.this,totalMoney+"",Toast.LENGTH_LONG).show();
+        Toast.makeText(Home.this,"huh",Toast.LENGTH_LONG).show();
+        Toast.makeText(Home.this,oneDayMoney+"",Toast.LENGTH_LONG).show();
         totalMoneyTextView= (TextView) findViewById(R.id.total);
         dayMoneyTextView = (TextView) findViewById(R.id.day);
         totalMoneyTextView.setText(totalMoney + "");
         dayMoneyTextView.setText(oneDayMoney + "");
-
-        // this condition moved to recalculator function,  we may remove it later
-        if (numberOfDays == 0) {
-            AlertDialog.Builder fineDialog = new AlertDialog.Builder(Home.this);
-            fineDialog.setMessage("الايام خلصت وباقى معاك" + totalMoney);
-            fineDialog.show();
-            SharedPreferences moneyData2 = getSharedPreferences("moneydata", MODE_PRIVATE);
-            SharedPreferences.Editor moneyDataEditor = moneyData2.edit();
-            moneyDataEditor.putLong("totalmoney", 0);
-            moneyDataEditor.putLong("numberofdays", numberOfDays);
-            moneyDataEditor.putLong("oneday", 0);
-            moneyDataEditor.commit();
+        if(numberOfDays==-1){
+            Intent newComerIntent=new Intent(this,NewComer.class);
+            startActivity(newComerIntent);
         }
     }
 
     public void ButtonClick(View view) {
-
         moneyvalue = (TextView) findViewById(R.id.moneyvalue);
         if(moneyvalue.getText().toString().equals("0"))
             moneyvalue.setText("");
@@ -91,14 +84,17 @@ public class Home extends AppCompatActivity {
 
     public void Delete(View view)
     {
+        moneyvalue = (TextView) findViewById(R.id.moneyvalue);
         if(moneyvalue.getText().toString().equals("")==false)
         moneyvalue.setText((moneyvalue.getText().toString()).substring(0,(moneyvalue.getText().toString()).length()-1));
-
+        if(moneyvalue.getText().toString().equals(""))
+            moneyvalue.setText("0");
     }
 
 
 
     public void Add(View view) {
+        moneyvalue = (TextView) findViewById(R.id.moneyvalue);
         if (numberOfDays!=-1) {
             totalMoney += Long.parseLong(moneyvalue.getText().toString());
             SharedPreferences moneyData = getSharedPreferences("moneydata", MODE_PRIVATE);
@@ -109,13 +105,15 @@ public class Home extends AppCompatActivity {
             moneyDataEditor.commit();
             totalMoneyTextView.setText(totalMoney + "");
             dayMoneyTextView.setText(oneDayMoney + "");
-
         }
+        moneyvalue.setText("0");
     }
 
     public void Sub(View view) {
+        moneyvalue = (TextView) findViewById(R.id.moneyvalue);
         if (numberOfDays!=-1) {
             totalMoney -= Long.parseLong(moneyvalue.getText().toString());
+            Log.e("Conda","Ahmed");
             SharedPreferences moneyData = getSharedPreferences("moneydata", MODE_PRIVATE);
             SharedPreferences.Editor moneyDataEditor = moneyData.edit();
             moneyDataEditor.putLong("totalmoney", totalMoney);
@@ -125,5 +123,6 @@ public class Home extends AppCompatActivity {
             totalMoneyTextView.setText(totalMoney + "");
             dayMoneyTextView.setText(oneDayMoney + "");
         }
+        moneyvalue.setText("0");
     }
 }

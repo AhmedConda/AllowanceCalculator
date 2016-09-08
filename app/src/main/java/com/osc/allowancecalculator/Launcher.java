@@ -70,6 +70,7 @@ public class Launcher extends AppCompatActivity {
         totalMoney = moneyData.getLong("totalmoney", 0);
         numberOfDays = moneyData.getLong("numberofdays", -1);
         oneDayMoney = moneyData.getLong("oneday", 0);
+        totalMoney+=oneDayMoney;
         numberOfDays-=days;
         if(totalMoney<0)
             return;
@@ -80,17 +81,18 @@ public class Launcher extends AppCompatActivity {
             SharedPreferences moneyData2 = getSharedPreferences("moneydata", MODE_PRIVATE);
             SharedPreferences.Editor moneyDataEditor = moneyData2.edit();
             moneyDataEditor.putLong("totalmoney", 0);
-            moneyDataEditor.putLong("numberofdays", numberOfDays);
+            moneyDataEditor.putLong("numberofdays", -1);
             moneyDataEditor.putLong("oneday", 0);
             moneyDataEditor.commit();
         }
-
-        oneDayMoney=totalMoney/numberOfDays;
-        SharedPreferences.Editor moneyDataEditor = moneyData.edit();
-        moneyDataEditor.putLong("totalmoney",  totalMoney);
-        moneyDataEditor.putLong("numberofdays", numberOfDays);
-        moneyDataEditor.putLong("oneday", (totalMoney / numberOfDays));
-        moneyDataEditor.commit();
+        else {
+            oneDayMoney = totalMoney / numberOfDays;
+            SharedPreferences.Editor moneyDataEditor = moneyData.edit();
+            moneyDataEditor.putLong("totalmoney", totalMoney);
+            moneyDataEditor.putLong("numberofdays", numberOfDays);
+            moneyDataEditor.putLong("oneday", (totalMoney / numberOfDays));
+            moneyDataEditor.commit();
+        }
 
     }
 }
